@@ -6,7 +6,17 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
 
+
+
 from secret import SECRET_KEY
+from schemas import UserBase, UserDisplay
+
+from sqlalchemy.orm.session import Session
+from typing import List
+
+from db import db_user
+from db.base import get_db
+
 #SECRET_KEY = "da257a3e4b6595c441ff526c6d6b751a68cf5d1f49b8221ffc87501865ee4b25"
 
 
@@ -115,7 +125,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     return current_user
 
 
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=Token, tags=["auth"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authentificate_user(fake_users_db, form_data.username, form_data.password)
     if not user:
@@ -130,16 +140,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+@router.post("/create_user", response_model=UserDisplay)
+async def create_user(request: UserBase, db: Session = Depends(get_db)):
+    return db_user.create_user(db, request)
 
-@router.get("/user/me", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user
+@router.post("/get_user", response_model=UserDisplay | None)
+async def get_user(email: str, db: Session = Depends(get_db)):
+    return db_user.get_user(db, email)
+    #return db_user.get_all_users(db)[0]
 
-
-@router.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
-
-@router.get("/secret/")
-async def read_secret(current_user: User = Depends(get_current_active_user)):
-    return {"secret": "Sarometz ne podliy"}

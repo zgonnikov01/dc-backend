@@ -1,11 +1,19 @@
 from fastapi import Depends, FastAPI
-from routers import auth
+from routers import auth, staff
 from routers.auth import get_current_active_user, User
+from db.base import engine
+from db import models
 
 
-app = FastAPI()
+app = FastAPI(
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1}
+)
+
 app.include_router(auth.router)
+app.include_router(staff.router)
 
-@app.get("/secret/")
+@app.get("/secret/", tags=["main"])
 async def read_secret(current_user: User = Depends(get_current_active_user)):
     return {"secret": "Sarometz ne podliy"}
+
+models.Base.metadata.create_all(engine)
