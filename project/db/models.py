@@ -36,14 +36,18 @@ class DbCheck(Base):
 class DbProduct(Base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True, index=True)
-    check_id = Column(Integer, ForeignKey('checks.id'))
+    check_id = Column(Integer, ForeignKey('checks.id', ondelete='CASCADE'), nullable=False)
+
+    check = relationship('DbCheck', backref='products')
+
     name = Column(String, index=True)
+    date_time = Column(DateTime, index=True)
     price = Column(Integer)
-    quantity = Column(Integer)
+    #quantity = Column(Integer)
     points_spent = Column(Integer)
     points_earned = Column(Integer)
     sector = Column(String, index=True)
     city = Column(String, index=True)
     store = Column(String, index=True)
     cashier = Column(String, index=True)
-
+    category = Column(String, index=True)

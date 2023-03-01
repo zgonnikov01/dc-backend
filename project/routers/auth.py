@@ -16,6 +16,13 @@ from typing import List
 
 from db import db_user
 from db.base import get_db
+from db.db_user import get_user
+
+from schemas import Token, TokenData
+from hash import Hash
+User = UserBase
+
+
 
 #SECRET_KEY = "da257a3e4b6595c441ff526c6d6b751a68cf5d1f49b8221ffc87501865ee4b25"
 
@@ -31,59 +38,35 @@ fake_users_db = {
         "username": "sarometz",
         "full_name": "Evgeny Andreevich",
         "email": "sarometz@example.com",
-        #"hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
         "hashed_password": pwd_context.hash("podliy"),
         "disabled": False,
     }
 }
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: str | None = None
-
-
-class User(BaseModel):
-    username: str
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
-
-
-class UserInDB(User):
-    hashed_password: str
-
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-router = APIRouter()
+router = APIRouter(
+    tags=["auth"]
+)
 
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-
-
-def authentificate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authentificate_user(email: str, password: str, db: Session):
+    #user = get_user(fake_db, username)
+    print('-' * 100)
+    print(get_db)
+    print(db)
+    print('-' * 100)
+    user = get_user(db, email)
+    print(user.email)
+    print(user.password)
+    print(type(user))
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    print(password, user.password)
+    if not Hash.verify(password, user.password):
         return False
     return user
 
@@ -99,7 +82,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -107,27 +90,28 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
+        email: str = payload.get("sub")
+        if email is None:
             raise credentials_exception
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    #user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(db, email)
     if user is None:
         raise credentials_exception
     return user
 
 
-async def get_current_active_user(current_user: User = Depends(get_current_user)):
+def get_current_active_user(current_user: User = Depends(get_current_user)):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
 
 @router.post("/token", response_model=Token, tags=["auth"])
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authentificate_user(fake_users_db, form_data.username, form_data.password)
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = authentificate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -136,7 +120,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
     access_token_expires = timedelta(days=ACCESS_TOKEN_EXPIRE_DAYS)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -144,8 +128,8 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 async def create_user(request: UserBase, db: Session = Depends(get_db)):
     return db_user.create_user(db, request)
 
-@router.post("/get_user", response_model=UserDisplay | None)
-async def get_user(email: str, db: Session = Depends(get_db)):
-    return db_user.get_user(db, email)
+#@router.post("/get_user", response_model=UserDisplay | None)
+#async def get_user(email: str, db: Session = Depends(get_db)):
+#    return db_user.get_user(db, email)
     #return db_user.get_all_users(db)[0]
 
