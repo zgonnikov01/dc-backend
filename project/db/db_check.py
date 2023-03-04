@@ -3,6 +3,8 @@ from schemas import CheckBase
 from db.models import DbCheck
 from sqlalchemy.sql.sqltypes import DateTime
 from db.db_product import create_product
+from datetime import datetime
+from .models import DbProductByDate, DbProduct
 
 def create_check(db: Session, request: CheckBase):
     print(request)
@@ -41,7 +43,7 @@ def create_check(db: Session, request: CheckBase):
                 product.category,
                 request.payment_type
             ))
-        date = date_time.date()
+        date = request.date_time.date()
         date_product = db.query(DbProductByDate)\
             .filter(DbProductByDate.date == date)\
             .filter(DbProduct.category == product.category)
@@ -57,7 +59,7 @@ def create_check(db: Session, request: CheckBase):
                 city = request.city,
                 store = request.store,
                 cashier = request.cashier,
-                category = request.category,
+                category = product.category,
                 payment_type = request.payment_type
             )
     db.commit()
