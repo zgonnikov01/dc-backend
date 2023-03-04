@@ -2,142 +2,71 @@
   "number": "23RSTb4X4",
   "date_time": "2023-03-01T08:00:04.941Z",
   "total": 412298,
-  "points_spent": 0,
-  "points_earned": 0,
-  "sector": "string",
-  "city": "string",
-  "store": "string",
-  "cashier": "string",
+  "sector": "1",
+  "city": "Ставрополь",
+  "store": "Космос ЦГ",
+  "cashier": "Саромецкий Евгений Андреевич",
+  "payment_type": "Наличный расчёт",
   "products": [
     {
       "name": "Iphone 14 Black 512",
       "price": 160000,
       "quantity": 1,
-      "date_time": "2023-01-01T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Иванов Иван Иванович",
       "category": "Моб. телефоны"
     },
     {
       "name": "Iphone XR Red 256",
       "price": 70000,
       "quantity": 1,
-      "date_time": "2023-02-06T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Иванов Иван Иванович",
       "category": "Моб. телефоны"
     },
     {
       "name": "Poco M3 Black",
       "price": 23000,
       "quantity": 1,
-      "date_time": "2023-02-06T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Иванов Иван Иванович",
       "category": "Моб. телефоны"
     },
     {
       "name": "Кабель зарядный Dexp Type C 1.4 м",
       "price": 149,
       "quantity": 2,
-      "date_time": "2023-02-25T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Иванов Иван Иванович",
       "category": "Аксессуары"
     },
     {
       "name": "RTX 4090",
       "price": 159000,
       "quantity": 2,
-      "date_time": "2023-03-01T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Иванов Иван Иванович",
       "category": "Комп. техника"
     },
     {
       "name": "Iphone 14 Black 512",
       "price": 160000,
       "quantity": 1,
-      "date_time": "2023-01-01T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Петров Петр Петрович",
-      "category": "Цифроград центр"
+      "category": "Моб. телефоны"
     },
     {
       "name": "Iphone XR Red 256",
       "price": 70000,
       "quantity": 1,
-      "date_time": "2023-02-06T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Петров Петр Петрович",
-      "category": "Цифроград центр"
+      "category": "Моб. телефоны"
     },
     {
       "name": "Poco M3 Black",
       "price": 23000,
       "quantity": 1,
-      "date_time": "2023-02-15T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Петров Петр Петрович",
-      "category": "Цифроград центр"
+      "category": "Моб. телефоны"
     },
     {
       "name": "Кабель зарядный Dexp Type C 1.4 м",
       "price": 149,
       "quantity": 2,
-      "date_time": "2023-02-25T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Петров Петр Петрович",
-      "category": "Цифроград центр"
+      "category": "Аксессуары"
     },
     {
       "name": "RTX 4090",
       "price": 159000,
       "quantity": 2,
-      "date_time": "2023-03-01T08:00:04.941Z",
-      "points_spent": 0,
-      "points_earned": 0,
-      "sector": "1",
-      "city": "Stavropol",
-      "store": "Xiaomi Космос",
-      "cashier": "Петров Петр Петрович",
-      "category": "Цифроград центр"
+      "category": "Комп. техника"
     }
   ]
 }

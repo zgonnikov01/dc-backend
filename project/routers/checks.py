@@ -23,14 +23,16 @@ async def post_check(request: schemas.CheckBase, db: Session = Depends(get_db)):
 
 @router.get("/get_checks")
 async def get_checks(
-        date_time: datetime | bool = True,
-        sector: str = True,
-        city: str = True,
-        store: str = True,
-        cashier: str = True,
+        date_time_start: datetime | str = '',
+        date_time_end: datetime | str = '',
+        sector: str = '',
+        city: str = '',
+        store: str = '',
+        cashier: str = '',
+        payment_type: str = '',
         db: Session = Depends(get_db)
         ):
-    return db_check.get_checks(db, date_time, sector, city, store, cashier)
+    return db_check.get_checks(db, date_time, sector, city, store, cashier, payment_type)
 
 #@router.get("/get_sales", response_model=list[Product])
 #async def get_users(db: Session = Depends(get_db)):

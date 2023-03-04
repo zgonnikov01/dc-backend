@@ -2,32 +2,23 @@ from sqlalchemy.orm.session import Session
 from schemas import ProductBase
 from db.models import DbProduct
 from sqlalchemy.sql.sqltypes import DateTime
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, and_
 
-def create_product(db: Session, check_id, name, date_time, price, points_spent, 
-        points_earned, sector, city, store, cashier, category):
+def create_product(db: Session, check_id, name, date_time, price, sector, city, store, cashier, category, payment_type):
 
     new_product = DbProduct(
-        #name = request.name,
-        #date_time = request.date_time,
-        #total = request.total,
-        #points_spent = request.points_spent,
-        #points_earned = request.points_earned,
-        #sector = request.sector,
-        #city = request.city,
-        #store = request.store,
-        #cashier = equest.cashier,
         check_id = check_id,
         name = name,
         date_time = date_time,
         price = price,
-        points_spent = points_spent,
-        points_earned = points_earned,
+        #points_spent = points_spent,
+        #points_earned = points_earned,
         sector = sector,
         city = city,
         store = store,
         cashier = cashier,
-        category = category
+        category = category,
+        payment_type = payment_type
     )
 
     db.add(new_product)
@@ -36,13 +27,14 @@ def create_product(db: Session, check_id, name, date_time, price, points_spent,
     return new_product
 
 
-def get_products(db: Session, date_time_start, date_time_end, sector, city, store, cashier, category):
+def get_products(db: Session, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type):
     print(date_time_start)
     print(date_time_end)
     print(sector)
     print(city)
     print(store)
     print(cashier)
+    print(payment_type)
     #if not date_time:
     #    date_time = True
     #if not sector:
@@ -57,12 +49,21 @@ def get_products(db: Session, date_time_start, date_time_end, sector, city, stor
     #print(db.query(DbProduct).all())
                                #filter(func.date(DbProduct.date_time) >= date_time_start).\
                                #filter(func.date(DbProduct.date_time) <= date_time_end).\
-    return db.query(DbProduct).\
-                               filter(DbProduct.date_time >= date_time_start).\
-                               filter(DbProduct.date_time <= date_time_end).\
-                               filter(or_(DbProduct.category == category, True)).\
-                               all()
-                               #filter(DbCheck.sector = sector).
-                               #filter(DbCheck.city = city).
-                               #filter(DbCheck.store = store).
-                               #filter(DbCheck.cashier = cashier).
+    return db.query(DbProduct)\
+        .filter(
+            and_(
+                or_(DbProduct.date_time >= date_time_start, date_time_start == ''), 
+                or_(DbProduct.date_time <= date_time_end, date_time_end == '')
+            )
+        )\
+        .filter(or_(DbProduct.sector == sector, sector == ''))\
+        .filter(or_(DbProduct.city== city, city == ''))\
+        .filter(or_(DbProduct.store == store, store == ''))\
+        .filter(or_(DbProduct.cashier == cashier, cashier == ''))\
+        .filter(or_(DbProduct.category == category, category == ''))\
+        .filter(or_(DbProduct.payment_type == payment_type, payment_type == ''))\
+        .all()
+        #filter(DbCheck.sector = sector).
+        #filter(DbCheck.city = city).
+        #filter(DbCheck.store = store).
+        #filter(DbCheck.cashier = cashier).

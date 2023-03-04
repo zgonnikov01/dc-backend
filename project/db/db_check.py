@@ -11,8 +11,8 @@ def create_check(db: Session, request: CheckBase):
         number = request.number,
         date_time = request.date_time,
         total = request.total,
-        points_spent = request.points_spent,
-        points_earned = request.points_earned,
+        #points_spent = request.points_spent,
+        #points_earned = request.points_earned,
         sector = request.sector,
         city = request.city,
         store = request.store,
@@ -30,16 +30,38 @@ def create_check(db: Session, request: CheckBase):
                 db,
                 new_check.id,
                 product.name,
-                product.date_time,
+                request.date_time,
                 product.price,
-                product.points_spent,
-                product.points_earned,
-                product.sector,
-                product.city,
-                product.store,
-                product.cashier,
-                product.category
+                #product.points_spent,
+                #product.points_earned,
+                request.sector,
+                request.city,
+                request.store,
+                request.cashier,
+                product.category,
+                request.payment_type
             ))
+        date = date_time.date()
+        date_product = db.query(DbProductByDate)\
+            .filter(DbProductByDate.date == date)\
+            .filter(DbProduct.category == product.category)
+        if date_product.count():
+            date_product.first().total += product.price * product.quantity
+        else:
+            new_date_product = DbProductByDate(
+                date = date,
+                total = product.price * product.quantity,
+                #points_spent = points_spent,
+                #points_earned = points_earned,
+                sector = request.sector,
+                city = request.city,
+                store = request.store,
+                cashier = request.cashier,
+                category = request.category,
+                payment_type = request.payment_type
+            )
+    db.commit()
+
     print('-' * 100)
     print(new_check.id)
     print('-' * 100)
@@ -49,7 +71,7 @@ def create_check(db: Session, request: CheckBase):
     return new_check
 
 
-def get_checks(db: Session, date_time, sector, city, store, cashier):
+def get_checks(db: Session, date_time, sector, city, store, cashier, payment_type):
     print(date_time)
     print(sector)
     print(city)

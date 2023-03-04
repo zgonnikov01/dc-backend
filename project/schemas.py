@@ -36,14 +36,15 @@ class ProductBase(BaseModel):
     name: str
     price: int
     quantity: int
-    date_time: datetime
-    points_spent: int
-    points_earned: int
-    sector: str
-    city: str
-    store: str
-    cashier: str
+    #date_time: datetime
+    #points_spent: int
+    #points_earned: int
+    #sector: str
+    #city: str
+    #store: str
+    #cashier: str
     category: str
+    #payment_type: str
 
     class Config():
         orm_mode = True
@@ -53,8 +54,8 @@ class ProductRequest(BaseModel):
     name: str
     price: int
     date_time: datetime
-    points_spent: int
-    points_earned: int
+    #points_spent: int
+    #points_earned: int
     sector: str
     city: str
     store: str
@@ -74,12 +75,13 @@ class CheckBase(BaseModel):
     number: str
     date_time: datetime
     total: int
-    points_spent: int
-    points_earned: int
+    #points_spent: int
+    #points_earned: int
     sector: str
     city: str
     store: str
     cashier: str
+    payment_type: str
     products: list[ProductBase]
 
     class Config():

@@ -8,6 +8,7 @@ import schemas
 from datetime import datetime
 from db.models import DbProduct
 
+from random import random
 
 router = APIRouter(
     tags=["product"]
@@ -17,31 +18,20 @@ router = APIRouter(
 #async def post_check(request: schemas.CheckBase, db: Session = Depends(get_db)):
 #    return db_check.create_check(db, request)
 
-@router.get("/get_products")
-async def get_products(
-        date_time_start: datetime | bool = True,
-        date_time_end: datetime | bool = True,
-        sector: str = True,
-        city: str = True,
-        store: str = True,
-        cashier: str = True,
-        category: str = True,
-        db: Session = Depends(get_db)
-        ):
-    return db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category)
 
-@router.get("/get_products_daily")
-async def get_products_daily(
-        date_time_start: datetime | bool = True,
-        date_time_end: datetime | bool = True,
-        sector: str = True,
-        city: str = True,
-        store: str = True,
-        cashier: str = True,
-        category: str = True,
+@router.get("/get_sales_data")
+async def get_sales_data(
+        date_time_start: datetime | str = '',
+        date_time_end: datetime | str = '',
+        sector: str = '',
+        city: str = '',
+        store: str = '',
+        cashier: str = '',
+        category: str = '',
+        payment_type: str = '',
         db: Session = Depends(get_db)
         ):
-    products = db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category)
+    products = db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type)
     d = {}
     total = 0
     for product in products:
@@ -52,14 +42,59 @@ async def get_products_daily(
         d[date].append(product)
         total += product.price
     #return list(d.values())
+    print(d)
     return total
 
-async def get_all_products_by_date(
-        date_time_start: datetime | bool,
-        date_time_end: datetime | bool,
+
+@router.get("/get_sales_data/all")
+async def get_sales_data_all(
+        date_time_start: datetime | str = '',
+        date_time_end: datetime | str = '',
+        sector: str = '',
+        city: str = '',
+        store: str = '',
+        cashier: str = '',
+        payment_type: str = '',
         db: Session = Depends(get_db)
         ):
-    pass
+
+    #products = db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type)
+    categories = [
+        'Моб. телефоны',
+        'Аксессуары',
+        'Комп. техника'
+    ]
+    data = {}
+    for category in categories:
+        fact = await get_sales_data(
+                date_time_start, #date_time_start: datetime | str = '',
+                date_time_end, #date_time_end: datetime | str = '',
+                sector, #sector: str = '',
+                city, #city: str = '',
+                store, #store: str = '',
+                cashier, #cashier: str = '',
+                category, #category: str = '',
+                payment_type, #payment_type: str = '',
+                db #db: Session = Depends(get_db)
+                ),
+        fact = fact[0]
+
+        data[category] = {
+                'fact': fact,
+                'plan': round(float(fact) * random() * 10, 2),
+                'pred': round(float(fact) * random() * 10, 2),
+            }
+
+
+
+        #data[category] = db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type)
+
+
+    return data
+
+
 #@router.get("/get_sales", response_model=list[Product])
 #async def get_users(db: Session = Depends(get_db)):
 #    return get_all_users(db)
+
+
