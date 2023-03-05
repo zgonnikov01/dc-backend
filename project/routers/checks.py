@@ -32,7 +32,7 @@ async def get_checks(
         payment_type: str = '',
         db: Session = Depends(get_db)
         ):
-    return db_check.get_checks(db, date_time, sector, city, store, cashier, payment_type)
+    return db_check.get_checks(db, date_time_start, date_time_end, sector, city, store, cashier, payment_type)
 
 #@router.get("/get_sales", response_model=list[Product])
 #async def get_users(db: Session = Depends(get_db)):

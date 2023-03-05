@@ -81,7 +81,7 @@ async def get_sales_data_all(
 
         data[category] = {
                 'fact': fact,
-                'plan': round(float(fact) * random() * 10, 2),
+                'plan': 10000000,
                 'pred': round(float(fact) * random() * 10, 2),
             }
 

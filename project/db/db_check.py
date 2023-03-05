@@ -73,8 +73,9 @@ def create_check(db: Session, request: CheckBase):
     return new_check
 
 
-def get_checks(db: Session, date_time, sector, city, store, cashier, payment_type):
-    print(date_time)
+def get_checks(db: Session, date_time_start, date_time_end, sector, city, store, cashier, payment_type):
+    print(date_time_start)
+    print(date_time_end)
     print(sector)
     print(city)
     print(store)
@@ -91,3 +92,20 @@ def get_checks(db: Session, date_time, sector, city, store, cashier, payment_typ
     #    cashier = True
     #return db.query(DbCheck).filter(DbCheck.date_time == date_time).all()
     return db.query(DbCheck).all()
+    return db.query(DbCheck)\
+        .filter(
+            and_(
+                or_(DbCheck.date_time >= date_time_start, date_time_start == ''), 
+                or_(DbCheck.date_time <= date_time_end, date_time_end == '')
+            )
+        )\
+        .filter(or_(DbCheck.sector == sector, sector == ''))\
+        .filter(or_(DbCheck.city== city, city == ''))\
+        .filter(or_(DbCheck.store == store, store == ''))\
+        .filter(or_(DbCheck.cashier == cashier, cashier == ''))\
+        .filter(or_(DbCheck.payment_type == payment_type, payment_type == ''))\
+        .all()
+        #filter(DbCheck.sector = sector).
+        #filter(DbCheck.city = city).
+        #filter(DbCheck.store = store).
+        #filter(DbCheck.cashier = cashier).
