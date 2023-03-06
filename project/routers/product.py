@@ -58,18 +58,19 @@ async def get_sales_data_all(
 
     #products = db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type)
     categories = [
-        ['Моб. телефоны', 3000000],
-        ['Аксессуары', 1500000],
-        ['Комп. техника', 1150000],
-        ['Билайн', 3000],
-        ['МТС', 2770],
-        ['Мегафон', 700],
-        ['YOTA', 90],
-        ['ТЕЛЕ2', 180],
-        ['ДСО', 3700000],
-        ['Настройки', 3800000],
-        ['ВСК cтрахование', 1150000]
+        ['Моб. телефоны', 3000000, 3500000],
+        ['Аксессуары', 1500000, 1700000],
+        ['Комп. техника', 1150000, 970000],
+        ['Билайн', 3000, 4879],
+        ['МТС', 2770, 2312],
+        ['Мегафон', 700, 321],
+        ['YOTA', 90, 42],
+        ['ТЕЛЕ2', 180, 423],
+        ['ДСО', 3700000, 3298983],
+        ['Настройки', 3800000, 583321],
+        ['ВСК cтрахование', 1150000, 902321]
     ]
+
     data = {}
     for category in categories:
         fact = await get_sales_data(
@@ -79,16 +80,16 @@ async def get_sales_data_all(
                 city, #city: str = '',
                 store, #store: str = '',
                 cashier, #cashier: str = '',
-                category, #category: str = '',
+                category[0], #category: str = '',
                 payment_type, #payment_type: str = '',
                 db #db: Session = Depends(get_db)
                 ),
         fact = fact[0]
 
-        data[category] = {
+        data[category[0]] = {
                 'fact': fact,
-                'plan': 10000000,
-                'pred': round(float(fact) * random() * 10, 2),
+                'plan': category[1],
+                'pred': category[2]#round(float(fact) * random() * 10, 2),
             }
 
 
