@@ -7,7 +7,6 @@ from datetime import datetime
 from .models import DbProductByDate, DbProduct
 
 def create_check(db: Session, request: CheckBase):
-    print(request)
     #products = [Product() for product in request.products]
     new_check = DbCheck(
         number = request.number,
@@ -64,22 +63,12 @@ def create_check(db: Session, request: CheckBase):
             )
     db.commit()
 
-    print('-' * 100)
-    print(new_check.id)
-    print('-' * 100)
-    
     db.commit()
     db.refresh(new_check)
     return new_check
 
 
 def get_checks(db: Session, date_time_start, date_time_end, sector, city, store, cashier, payment_type):
-    print(date_time_start)
-    print(date_time_end)
-    print(sector)
-    print(city)
-    print(store)
-    print(cashier)
     #if not date_time:
     #    date_time = True
     #if not sector:

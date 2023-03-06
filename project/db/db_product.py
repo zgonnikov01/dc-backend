@@ -28,13 +28,6 @@ def create_product(db: Session, check_id, name, date_time, price, sector, city, 
 
 
 def get_products(db: Session, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type):
-    print(date_time_start)
-    print(date_time_end)
-    print(sector)
-    print(city)
-    print(store)
-    print(cashier)
-    print(payment_type)
     #if not date_time:
     #    date_time = True
     #if not sector:

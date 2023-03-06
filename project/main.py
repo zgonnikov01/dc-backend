@@ -12,9 +12,9 @@ app = FastAPI(
     swagger_ui_parameters={"defaultModelsExpandDepth": -1}
 )
 
-app.include_router(auth.router)
+#app.include_router(auth.router)
 app.include_router(checks.router)
-app.include_router(staff.router)
+#app.include_router(staff.router)
 app.include_router(product.router)
 
 #@app.get("/secret/", tags=["main"])

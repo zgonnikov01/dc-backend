@@ -35,14 +35,12 @@ async def get_sales_data(
     d = {}
     total = 0
     for product in products:
-        print(product)
         date = product.date_time.date
         if date not in d:
             d[date] = []
         d[date].append(product)
         total += product.price
     #return list(d.values())
-    print(d)
     return total
 
 
@@ -60,9 +58,17 @@ async def get_sales_data_all(
 
     #products = db_product.get_products(db, date_time_start, date_time_end, sector, city, store, cashier, category, payment_type)
     categories = [
-        'Моб. телефоны',
-        'Аксессуары',
-        'Комп. техника'
+        ['Моб. телефоны', 3000000],
+        ['Аксессуары', 1500000],
+        ['Комп. техника', 1150000],
+        ['Билайн', 3000],
+        ['МТС', 2770],
+        ['Мегафон', 700],
+        ['YOTA', 90],
+        ['ТЕЛЕ2', 180],
+        ['ДСО', 3700000],
+        ['Настройки', 3800000],
+        ['ВСК cтрахование', 1150000]
     ]
     data = {}
     for category in categories:
