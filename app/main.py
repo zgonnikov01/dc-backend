@@ -10,7 +10,7 @@ from db import models
 #from schemas import MyDateTime
 
 app = FastAPI(
-    swagger_ui_parameters={"defaultModelsExpandDepth": -1}
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1}, root_path="/api/v1"
 )
 
 app.add_middleware(
