@@ -56,12 +56,8 @@ router = APIRouter(
 def authentificate_user(email: str, password: str, db: Session):
     #user = get_user(fake_db, username)
     user = get_user(db, email)
-    print(user.email)
-    print(user.password)
-    print(type(user))
     if not user:
         return False
-    print(password, user.password)
     if not Hash.verify(password, user.password):
         return False
     return user
@@ -106,12 +102,12 @@ def get_current_active_user(current_user: User = Depends(get_current_user)):
 
 def get_user_provider(current_active_user: User = Depends(get_current_active_user)):
     if current_active_user.access_level == -1:
-        return current_user
+        return current_active_user
     raise HTTPException(status_code=401, detail="Provider rights required")
 
 def get_user_admin(current_active_user: User = Depends(get_current_active_user)):
     if current_active_user.access_level == 9999:
-        return current_user
+        return current_active_user
     raise HTTPException(status_code=401, detail="Admin rights required")
 
 def get_user_full_access(current_active_user: User = Depends(get_current_active_user)):
@@ -121,7 +117,7 @@ def get_user_full_access(current_active_user: User = Depends(get_current_active_
 
 def get_user_manager(current_active_user: User = Depends(get_current_active_user)):
     if current_active_user.access_level >= 10:
-        return current_user
+        return current_active_user
     raise HTTPException(status_code=401, detail="Manager rights required")
 
 def get_user_basic(current_active_user: User = Depends(get_current_active_user)):
@@ -129,7 +125,8 @@ def get_user_basic(current_active_user: User = Depends(get_current_active_user))
         return current_active_user
     raise HTTPException(status_code=401, detail="Basic rights required")
 
-@router.post("/token", response_model=Token, tags=["auth"])
+#@router.post("/token", response_model=Token, tags=["auth"])
+@router.post("/token", tags=["auth"])
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authentificate_user(form_data.username, form_data.password, db)
     if not user:
@@ -143,7 +140,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     #return {"access_token": access_token, "token_type": "bearer"}
-    return {access_token}
+    return {"access_token": access_token}
 
 @router.post("/create_user", response_model=UserDisplay)
 async def create_user(

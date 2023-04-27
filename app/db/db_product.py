@@ -76,4 +76,3 @@ def get_products_graph(db: Session, date_time_start, date_time_end, sector, city
         .filter(or_(DbProduct.category == category, category == ''))\
         .filter(or_(DbProduct.payment_type == payment_type, payment_type == ''))\
         .all()
-    print(data[1])
